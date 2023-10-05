@@ -2,9 +2,11 @@
  * Класс FileUploaderModal
  * Используется как всплывающее окно для загрузки изображений
  */
-class FileUploaderModal {
+class FileUploaderModal extends BaseModal {
   constructor( element ) {
-
+    super(element)
+    this.modalUploader = document.querySelector(".file-uploader-modal")
+    this.registerEvents()
   }
 
   /**
@@ -17,6 +19,21 @@ class FileUploaderModal {
    * отправляет одно изображение, если клик был по кнопке отправки
    */
   registerEvents(){
+    const modalUploader = document.querySelector(".file-uploader-modal")
+    modalUploader.querySelector('.header i').addEventListener('click', () => this.close())
+    document.body.querySelector('.close.button').addEventListener('click', () => this.close())
+    document.body.querySelector('.send-all')
+        .addEventListener('click', () => this.sendAllImages())
+
+    this.modalUploader.addEventListener('click',  (event) => {
+      // console.log('event', event.target)
+      if (event.target.tagName === 'INPUT') {
+        event.target.parentElement.classList.remove('.error')
+      } else if (event.target.classList.contains('ui button')) {
+        const container = event.target.closest('.image-preview-container')
+        this.sendImage(container)
+      }
+    })
 
   }
 
@@ -24,27 +41,56 @@ class FileUploaderModal {
    * Отображает все полученные изображения в теле всплывающего окна
    */
   showImages(images) {
+    const modalContent = this.modalUploader.querySelector('.content')
 
+    modalContent.innerHTML = images.reverse().reduce((total, image) => {
+      total += this.getImageHTML(image)
+      return total
+    }, '')
   }
 
   /**
    * Формирует HTML разметку с изображением, полем ввода для имени файла и кнопкной загрузки
    */
   getImageHTML(item) {
-
+    return `
+        <div class="image-preview-container">
+            <img src='${item}' />
+            <div class="ui action input">
+              <input type="text" placeholder="Название файла">
+              <button class="ui button"><i class="upload icon"></i></button>
+            </div>
+        </div>`
   }
 
   /**
    * Отправляет все изображения в облако
    */
   sendAllImages() {
-
+    const containers = document.body.querySelectorAll(".image-preview-container")
+    containers.forEach(container => this.sendImage(container))
   }
 
   /**
    * Валидирует изображение и отправляет его на сервер
    */
   sendImage(imageContainer) {
+    const input = imageContainer.querySelector('input')
+    const url = imageContainer.querySelector('img')
+
+    if(input.value.trim()) {
+      console.log('imageContainer', imageContainer)
+      input.classList.add("disabled")
+      Yandex.uploadFile(input.value.trim(), url.src, () => {
+        imageContainer.remove()
+        const isEmpty = this.modalUploader.querySelectorAll('input').length
+        if (!isEmpty) {
+          this.close()
+        }
+      })
+    } else {
+      input.parentElement.classList.add("error")
+    }
 
   }
 }
