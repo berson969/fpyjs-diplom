@@ -5,6 +5,7 @@
 class PreviewModal extends BaseModal{
   constructor( element ) {
       super(element)
+      this.modalPreviewer = document.querySelector(".uploaded-previewer-modal")
       this.registerEvents()
   }
 
@@ -16,11 +17,11 @@ class PreviewModal extends BaseModal{
    * Скачивает изображение, если клик был на кнопке download
    */
   registerEvents() {
-    const modalPreviewer = document.querySelector(".uploaded-previewer-modal")
-    modalPreviewer.querySelector('.header i').addEventListener('click', () => this.close())
+    // const modalPreviewer = document.querySelector(".uploaded-previewer-modal")
+    this.modalPreviewer.querySelector('.header i').addEventListener('click', () => this.close())
 
 
-    const contentPreview = document.querySelector('.content')
+    const contentPreview = this.modalPreviewer.querySelector('.content')
     contentPreview.addEventListener('click', (event) => {
       const target = event.target
       const icon = target.querySelector('i')
@@ -29,20 +30,23 @@ class PreviewModal extends BaseModal{
         icon.classList.add('icon', 'spinner', 'loading')
         target.classList.add('disabled')
         const path = target.dataset.path
-        Yandex.removeFile(path, (err, data) => {
+        console.log('path', path)
+        Yandex.removeFile(path, (data) => {
 
-          if (!err && !data) {
+          console.log('dataPreview', data)
+          if (!data) {
             const container = target.closest('.image-preview-container')
-            container.parentNode.removeChild(container);
+            container.parentNode.removeChild(container)
+            if(!this.modalPreviewer.children.length) this.close()
           } else {
-            console.error(`Failed to remove file '${path}'`, err || data)
-            icon.classList.remove('icon', 'spinner', 'loading')
+            console.error(`Failed to remove file '${path}'`, data)
+            icon.classList.remove('spinner', 'loading')
             target.classList.remove('disabled')
           }
         })
 
       } else if (target.classList.contains('download')) {
-        Yandex.downloadFileByUrl(target.closest('.ui.download').dataset.file)
+        Yandex.downloadFileByUrl(target.getAttribute('data-file'))
       }
     })
   }
@@ -52,16 +56,15 @@ class PreviewModal extends BaseModal{
    * Отрисовывает изображения в блоке всплывающего окна
    */
   showImages(data) {
-    const modalContent = document.body.querySelector('.content')
-    console.log('data', data)
-    if (data) {
+    const modalContent = this.modalPreviewer.querySelector('.content')
 
-      modalContent.innerHTML = data.reverse().reduce((total, image) => {
+    if (data.items.length) {
+      modalContent.innerHTML = data.items.reverse().reduce((total, image) => {
         total += this.getImageInfo(image)
         return total
       }, '')
-    } else if (data.error){
-      alert(data.message)
+      this.registerEvents()
+    } else {
       this.close()
     }
   }
@@ -91,13 +94,13 @@ class PreviewModal extends BaseModal{
   getImageInfo(item) {
       return `
         <div class="image-preview-container">
-          <img src='${item.href}' />
+          <img src='${item.file}' />
           <table class="ui celled table">
           <thead>
             <tr><th>Имя</th><th>Создано</th><th>Размер</th></tr>
           </thead>
           <tbody>
-            <tr><td>${item.name}</td><td>${this.formatDate(item.create)}</td><td>${item.size}Кб</td></tr>
+            <tr><td>${item.name}</td><td>${this.formatDate(item.created)}</td><td>${item.size}Кб</td></tr>
           </tbody>
           </table>
           <div class="buttons-wrapper">

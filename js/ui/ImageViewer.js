@@ -27,7 +27,7 @@ class ImageViewer {
 
     this.blockImages.addEventListener('dblclick', (event) => {
       if (event.target.tagName === 'IMG') {
-        this.element.getElementsByTagName('img')[0]
+        this.element.querySelector('img.image')
             .setAttribute('src',event.target.getAttribute('src'))
       }
     })
@@ -57,8 +57,7 @@ class ImageViewer {
           .innerHTML = '<i class="asterisk loading icon massive"></i>'
       modalPreviewer.open()
 
-      Yandex.getUploadedFiles((err, data) => {
-        console.log('data', data)
+      Yandex.getUploadedFiles(data => {
         modalPreviewer.showImages(data)
       })
 
@@ -100,14 +99,22 @@ class ImageViewer {
     if(images && images.length) {
       document.body.getElementsByClassName('select-all')[0].classList.remove('disabled')
       images.forEach(href => {
-        const imageElement = document.createElement('div')
-        // imageElement.classList.add('four', 'wide', 'column', 'ui', 'medium', 'image-wrapper')
-        imageElement.classList.add('four', 'wide', 'column', 'medium')
-        imageElement.innerHTML = `<img src='${href}'</img>`
-        document.querySelector('.images-list .row').appendChild(imageElement)
+        if (!isImage(href)) {
+          const imageElement = document.createElement('div')
+          imageElement.classList.add('four', 'wide', 'column', 'medium')
+          imageElement.innerHTML = `<img src='${href}'</img>`
+          document.querySelector('.images-list .row').appendChild(imageElement)
+        }
       })
     } else {
       document.body.getElementsByClassName('select-all')[0].classList.remove('disabled')
+    }
+
+    function isImage(href) {
+      const xhr = new XMLHttpRequest()
+      xhr.open('HEAD', href, false)
+      xhr.send()
+      return xhr.status === 404
     }
   }
 

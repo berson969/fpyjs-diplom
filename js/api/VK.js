@@ -39,27 +39,6 @@ class VK {
   static processData(result) {
     document.getElementById('script').remove()
 
-    // function isImage(href) {
-    //   return new Promise((resolve, reject) => {
-    //     const xhr = new XMLHttpRequest()
-    //     xhr.open('HEAD', href, true)
-    //     xhr.addEventListener('readystatechange', () => {
-    //       if (xhr.readyState === xhr.DONE && xhr.status < 300) {
-    //         const contentType = xhr.getResponseHeader('Content-Type')
-    //         if (contentType && contentType.startsWith('image/')) {
-    //           resolve(true)
-    //         } else {
-    //           resolve(false)
-    //         }
-    //       } else {
-    //         resolve(false)
-    //       }
-    //     })
-    //     xhr.send()
-    //   })
-    // }
-
-    console.log('result', result)
     if (result.response) {
 
       const photosList = result.response.items
@@ -67,37 +46,13 @@ class VK {
 
       const images = photosList.reduce((array, image) => {
 
-        // const arrayPromises = Promise.all(photosList.map( async (image) => {
-        //   return new Promise((resolve) => {
+        image.sizes.sort((a, b) => b.type.localeCompare(a.type))
+        array.push(image.sizes[0].url)
+        return array
+      }, [])
 
-
-            image.sizes.sort((a, b) => b.type.localeCompare(a.type))
-            const href = image.sizes[0].url
-            // const answer = Yandex.downloadFileByUrl(href)
-            // console.log('answer',answer)
-            array.push(href)
-            return array
-
-        //     const isImageResult = isImage(href)
-        //       console.log('isImage', isImageResult, href)
-        //       if (isImageResult) {
-        //         resolve(href)
-        //       } else {
-        //         resolve(null)
-        //       }
-        //     // })
-          }, [])
-        // }))
-
-
-        // Promise.all(arrayPromises)
-        //     .then((array) => {
-        //       const images = arrayPromises.filter((item) => item !== null)
-
-              console.log('images', images)
-              this.lastCallback(images)
-              this.lastCallback = () => {}
-            // })
+      this.lastCallback(images)
+      this.lastCallback = () => {}
       }
     } else if (result.error) {
       alert('Ошибка запроса')

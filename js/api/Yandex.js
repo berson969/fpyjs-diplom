@@ -5,7 +5,10 @@
  * */
 class Yandex {
   static HOST = 'https://cloud-api.yandex.net/v1/disk';
-  static HEADERS = {"Authorization": `OAuth ${this.getToken()}`}
+  static HEADERS = {
+    "Authorization": `OAuth ${this.getToken()}`,
+    'Content-Type': 'application/json',
+  }
   /**
    * Метод формирования и сохранения токена для Yandex API
    */
@@ -50,7 +53,7 @@ class Yandex {
       method: 'GET',
       url: this.HOST + '/resources/files',
       headers: this.HEADERS,
-      data: {media_type: 'image'},
+      data: {media_type: 'image', type: 'file'},
     }, callback)
   }
 
@@ -60,8 +63,6 @@ class Yandex {
   static downloadFileByUrl(url) {
     const link = document.createElement('a')
     link.href = url
-    link.addEventListener('click', (event) => {
-      event.preventDefault()
-    })
+    link.click()
   }
 }

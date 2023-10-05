@@ -19,17 +19,17 @@ class FileUploaderModal extends BaseModal {
    * отправляет одно изображение, если клик был по кнопке отправки
    */
   registerEvents(){
-    const modalUploader = document.querySelector(".file-uploader-modal")
-    modalUploader.querySelector('.header i').addEventListener('click', () => this.close())
+    // const modalUploader = document.querySelector(".file-uploader-modal")
+    this.modalUploader.querySelector('.header i').addEventListener('click', () => this.close())
     document.body.querySelector('.close.button').addEventListener('click', () => this.close())
     document.body.querySelector('.send-all')
         .addEventListener('click', () => this.sendAllImages())
 
-    this.modalUploader.addEventListener('click',  (event) => {
+    this.modalUploader.querySelector('.content').addEventListener('click',  (event) => {
       // console.log('event', event.target)
       if (event.target.tagName === 'INPUT') {
         event.target.parentElement.classList.remove('.error')
-      } else if (event.target.classList.contains('ui button')) {
+      } else if (event.target.classList.contains('button')) {
         const container = event.target.closest('.image-preview-container')
         this.sendImage(container)
       }
@@ -68,6 +68,7 @@ class FileUploaderModal extends BaseModal {
    */
   sendAllImages() {
     const containers = document.body.querySelectorAll(".image-preview-container")
+    console.log('containerSS', containers)
     containers.forEach(container => this.sendImage(container))
   }
 
@@ -77,7 +78,7 @@ class FileUploaderModal extends BaseModal {
   sendImage(imageContainer) {
     const input = imageContainer.querySelector('input')
     const url = imageContainer.querySelector('img')
-
+    console.log('container', input, imageContainer)
     if(input.value.trim()) {
       console.log('imageContainer', imageContainer)
       input.classList.add("disabled")
