@@ -25,17 +25,20 @@ class PreviewModal extends BaseModal{
     contentPreview.addEventListener('click', (event) => {
 
       const target = event.target
-      const icon = target.querySelector('i')
 
-      if (target.classList.contains('delete') || target.parentElement.classList.contains('delete')) {
+      console.log('target', target)
+
+      if (target.closest('button.delete')) {
+        const icon = target.closest('button.delete').querySelector('i')
         icon.classList.add('icon', 'spinner', 'loading')
         target.closest('.delete').classList.add('disabled')
         const path = target.closest('.delete').dataset.path
         Yandex.removeFile(path, (data) => {
 
           if (!data) {
+            if(contentPreview.children.length === 1) this.close()
             target.closest('.image-preview-container').remove()
-            if(!contentPreview.children.length) this.close()
+
           } else {
             console.error(`Failed to remove file '${path}'`, data)
             icon.classList.remove('spinner', 'loading')
@@ -43,8 +46,8 @@ class PreviewModal extends BaseModal{
           }
         })
 
-      } else if (target.classList.contains('download') || target.parentElement.classList.contains('download')) {
-        Yandex.downloadFileByUrl(target.closest('.download').getAttribute('data-file'))
+      } else if (target.closest('button.download')) {
+        Yandex.downloadFileByUrl(target.closest('button.download').getAttribute('data-file'))
       }
     })
   }

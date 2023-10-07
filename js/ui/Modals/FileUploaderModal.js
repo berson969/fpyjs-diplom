@@ -1,5 +1,5 @@
 /**
- * Класс FileUploaderModal
+ * Класс FileUploaderModal.
  * Используется как всплывающее окно для загрузки изображений
  */
 class FileUploaderModal extends BaseModal {
@@ -30,7 +30,7 @@ class FileUploaderModal extends BaseModal {
       if (event.target.tagName === 'INPUT') {
         event.target.parentElement.classList.remove('.error')
 
-      } else if (event.target.closest('button').classList.contains('button')) {
+      } else if (event.target.closest('button.button')) {
         const container = event.target.closest('.image-preview-container')
         this.sendImage(container)
       }
@@ -84,11 +84,8 @@ class FileUploaderModal extends BaseModal {
       input.classList.add("disabled")
       Yandex.uploadFile(input.value.trim(), url.src, () => {
 
+        if (this.modalUploader.querySelectorAll('input').length === 1) this.close()
         imageContainer.remove()
-        const isEmpty = this.modalUploader.querySelectorAll('input').length
-        if (!isEmpty) {
-          this.close()
-        }
       })
 
     } else {
