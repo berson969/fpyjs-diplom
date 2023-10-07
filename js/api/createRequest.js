@@ -27,14 +27,13 @@ const createRequest = (options = {}, callback) => {
         console.error(err)
     }
 
-    xhr.addEventListener('readystatechange', (event) => {
-        if (xhr.readyState === xhr.DONE && xhr.status >= 200 && xhr.status < 300) {
-            console.log(xhr.response, 'response', xhr.status)
-            if (xhr.response.error) {
+    xhr.addEventListener('readystatechange', () => {
+        if (xhr.readyState === xhr.DONE) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                callback(xhr.response)
+            } else {
                 console.log(xhr.response.error, 'error')
                 callback(xhr.response.message)
-            } else {
-                callback(xhr.response)
             }
         }
     })

@@ -60,25 +60,15 @@ class ImageViewer {
       Yandex.getUploadedFiles(data => {
         modalPreviewer.showImages(data)
       })
-
-      // const selected = this.blockImages.querySelectorAll('.selected')
-      // const selectedData = Array.from(selected).reduce((array, selectData) => {
-      //
-      //   array.push(selectData)
-      //   console.log('selectData', selectData)
-      //   return array
-      // }, [])
-
-      // Yandex.getUploadedFiles((err, data) => {modalPreviewer.showImages(selectedData)})
     })
 
     document.body.querySelector('.send').addEventListener('click', () => {
       const modalUploader = App.getModal('fileUploader')
-      modalUploader.open()
+
       const selectedImages = this.blockImages.querySelectorAll('.selected')
       const imageLinks = Array.from(selectedImages).map(image => image.src)
-      console.log('imageLinks', imageLinks)
       modalUploader.showImages(imageLinks)
+      modalUploader.open()
       selectedImages.forEach(image => image.classList.remove('selected'))
       this.checkButtonText()
     })
@@ -125,12 +115,10 @@ class ImageViewer {
 
     const sendBtn = document.body.getElementsByClassName('send')[0]
     const images = this.blockImages.querySelectorAll('img')
-    console.log('images', images)
     const anyImageSelected = Array.from(images).some(image => image.classList.contains('selected'))
     const allImagesSelected = Array.from(images).every(image => image.classList.contains('selected'))
 
     sendBtn.classList.toggle('disabled', !anyImageSelected)
-    console.log('this.selectAllBtn', this.selectAllBtn, allImagesSelected)
     this.selectAllBtn.textContent = allImagesSelected ? 'Снять выделение' : 'Выбрать всё'
   }
 

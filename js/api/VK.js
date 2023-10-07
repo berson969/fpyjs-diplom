@@ -55,7 +55,8 @@ class VK {
       this.lastCallback = () => {}
       }
     } else if (result.error) {
-      alert('Ошибка запроса')
+      console.log('error', result.error.error_msg)
+      alert(`Ошибка запроса\n${result.error.error_msg}`)
     }
   }
 }

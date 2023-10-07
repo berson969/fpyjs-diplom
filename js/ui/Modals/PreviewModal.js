@@ -22,25 +22,20 @@ class PreviewModal extends BaseModal{
 
     // buttons-wrapper
     const contentPreview = this.modalPreviewer.querySelector('.content')
-    contentPreview.addEventListener('dblclick', (event) => {
+    contentPreview.addEventListener('click', (event) => {
 
       const target = event.target
-      console.log('target', target)
       const icon = target.querySelector('i')
 
       if (target.classList.contains('delete') || target.parentElement.classList.contains('delete')) {
-        event.stopPropagation()
         icon.classList.add('icon', 'spinner', 'loading')
         target.closest('.delete').classList.add('disabled')
         const path = target.closest('.delete').dataset.path
-        console.log('path', path)
         Yandex.removeFile(path, (data) => {
 
-          console.log('dataPreview', data)
           if (!data) {
-            const container = target.closest('.image-preview-container')
-            container.parentNode.removeChild(container)
-            if(!this.modalPreviewer.children.length) this.close()
+            target.closest('.image-preview-container').remove()
+            if(!contentPreview.children.length) this.close()
           } else {
             console.error(`Failed to remove file '${path}'`, data)
             icon.classList.remove('spinner', 'loading')
@@ -66,7 +61,7 @@ class PreviewModal extends BaseModal{
         total += this.getImageInfo(image)
         return total
       }, '')
-      this.registerEvents()
+      // this.registerEvents()
     } else {
       this.close()
     }
