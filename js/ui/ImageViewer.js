@@ -68,42 +68,7 @@ class ImageViewer {
         selectedImages.forEach(image => image.classList.remove('selected'))
         this.checkButtonText()
       }
-
-      // this.checkButtonText()
     })
-
-    // this.selectAllBtn.addEventListener('click', (event) => {
-      // const images = document.querySelectorAll('.images-list img')
-      // const allSelected = Array.from(images).every(image => image.classList.contains('selected'))
-
-      // images.forEach(image => {
-      //   image.classList.toggle('selected', !allSelected)
-      // })
-      // this.checkButtonText()
-    // })
-
-    // document.body.querySelector('.show-uploaded-files').addEventListener('click', (event) => {
-    //   const modalPreviewer = App.getModal('filePreviewer')
-    //
-    //   document.querySelector(".uploaded-previewer-modal .content")
-    //       .innerHTML = '<i class="asterisk loading icon massive"></i>'
-    //   modalPreviewer.open()
-    //
-    //   Yandex.getUploadedFiles(data => {
-    //     modalPreviewer.showImages(data)
-    //   })
-    // })
-
-    // document.body.querySelector('.send').addEventListener('click', () => {
-    //   const modalUploader = App.getModal('fileUploader')
-    //
-    //   const selectedImages = this.blockImages.querySelectorAll('.selected')
-    //   const imageLinks = Array.from(selectedImages).map(image => image.src)
-    //   modalUploader.showImages(imageLinks)
-    //   modalUploader.open()
-    //   selectedImages.forEach(image => image.classList.remove('selected'))
-    //   this.checkButtonText()
-    // })
   }
 
   /**
