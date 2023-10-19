@@ -19,23 +19,24 @@ class FileUploaderModal extends BaseModal {
    * отправляет одно изображение, если клик был по кнопке отправки
    */
   registerEvents(){
-    // const modalUploader = document.querySelector(".file-uploader-modal")
-    this.modalUploader.querySelector('.header i').addEventListener('click', () => this.close())
-    document.body.querySelector('.close.button').addEventListener('click', () => this.close())
-    document.body.querySelector('.send-all')
-        .addEventListener('click', () => this.sendAllImages())
 
-    this.modalUploader.querySelector('.content').addEventListener('click',  (event) => {
+    this.modalUploader.addEventListener('click', (event) => {
 
-      if (event.target.tagName === 'INPUT') {
-        event.target.parentElement.classList.remove('.error')
+      const target = event.target
+      if (target.classList.contains('icon') || target.classList.contains('close')) {
+        this.close()
 
-      } else if (event.target.closest('button.button')) {
-        const container = event.target.closest('.image-preview-container')
+      } else if (target.classList.contains('send-all')) { this.sendAllImages()
+
+      } else if (target.tagName === 'INPUT') {
+        target.parentElement.classList.remove('.error')
+
+      } else if (target.closest('button.button')) {
+        const container = target.closest('.image-preview-container')
         this.sendImage(container)
       }
-    })
 
+    })
   }
 
   /**
@@ -79,7 +80,7 @@ class FileUploaderModal extends BaseModal {
     const input = imageContainer.querySelector('input')
     const url = imageContainer.querySelector('img')
 
-    if(input.value.trim()) {
+    if(input && input.value.trim()) {
 
       input.classList.add("disabled")
       Yandex.uploadFile(input.value.trim(), url.src, () => {

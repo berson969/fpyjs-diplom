@@ -8,7 +8,7 @@ class SearchBlock {
       this.element = element
       this.registerEvents()
     } else {
-      throw new Error()
+      throw new Error('Element is not provided in SearchBlock constructor')
     }
 
   }

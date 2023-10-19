@@ -28,7 +28,7 @@ class VK {
       &callback=VK.processData&access_token=${VK.ACCESS_TOKEN}&v=5.154`
 
 
-    document.getElementsByTagName('body')[0].insertAdjacentElement('beforeend', script)
+    document.body.insertAdjacentElement('beforeend', script)
   }
 
 
@@ -50,8 +50,9 @@ class VK {
         array.push(image.sizes[0].url)
         return array
       }, [])
-
+      // console.log('images', images)
       this.lastCallback(images)
+
       this.lastCallback = () => {}
       }
     } else if (result.error) {

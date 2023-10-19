@@ -17,16 +17,12 @@ class PreviewModal extends BaseModal{
    * Скачивает изображение, если клик был на кнопке download
    */
   registerEvents() {
-    // const modalPreviewer = document.querySelector(".uploaded-previewer-modal")
     this.modalPreviewer.querySelector('.header i').addEventListener('click', () => this.close())
 
-    // buttons-wrapper
     const contentPreview = this.modalPreviewer.querySelector('.content')
     contentPreview.addEventListener('click', (event) => {
 
       const target = event.target
-
-      console.log('target', target)
 
       if (target.closest('button.delete')) {
         const icon = target.closest('button.delete').querySelector('i')
@@ -93,9 +89,10 @@ class PreviewModal extends BaseModal{
    * Возвращает разметку из изображения, таблицы с описанием данных изображения и кнопок контроллеров (удаления и скачивания)
    */
   getImageInfo(item) {
+    console.log(item)
       return `
         <div class="image-preview-container">
-          <img src='${item.file}' />
+          <img src='${item.file}'>
           <table class="ui celled table">
           <thead>
             <tr><th>Имя</th><th>Создано</th><th>Размер</th></tr>

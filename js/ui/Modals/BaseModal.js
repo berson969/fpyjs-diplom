@@ -1,14 +1,14 @@
 /**
  * Класс BaseModal.
- * Используется как базовый класс всплывающего окна
- */
-class BaseModal {
+  * Используется как базовый класс всплывающего окна
+*/
+  class BaseModal {
   constructor( element ) {
     if (element) {
       this.element = element
 
     } else {
-      throw new Error()
+      throw new Error('Element is not provided in BaseModal constructor')
     }
   }
 
